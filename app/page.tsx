@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Mail, Linkedin, Github, Globe, ExternalLink } from "lucide-react";
@@ -57,6 +59,7 @@ const socials = [
 function BackgroundCode() {
   const columns = 22;
   const rows = 34;
+  const [mounted, setMounted] = useState(false);
   const [streams, setStreams] = useState(() =>
     Array.from({ length: columns }, (_, col) => ({
       id: col,
@@ -69,6 +72,7 @@ function BackgroundCode() {
   );
 
   useEffect(() => {
+    setMounted(true);
     const interval = setInterval(() => {
       setStreams((prev) =>
         prev.map((stream) => ({
@@ -84,6 +88,8 @@ function BackgroundCode() {
 
     return () => clearInterval(interval);
   }, []);
+
+  if (!mounted) return null;
 
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -157,8 +163,10 @@ function SectionTitle({ children }) {
 function TypewriterTitle() {
   const fullText = "Hi, I'm Greg Cunningham.";
   const [displayed, setDisplayed] = useState("");
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     let interval;
     const timeout = setTimeout(() => {
       let index = 0;
@@ -177,7 +185,7 @@ function TypewriterTitle() {
 
   return (
     <div className="mt-10 flex items-center gap-2 text-4xl font-black tracking-[0.04em] text-white md:text-5xl">
-      <span>{displayed}</span>
+      <span>{mounted ? displayed : ""}</span>
       <motion.span
         className="inline-block h-[1.05em] w-[0.6ch] bg-zinc-200"
         animate={{ opacity: [1, 0, 1] }}
@@ -209,6 +217,7 @@ export default function GregPortfolioSite() {
         transition={{ duration: 0.45 }}
       >
         <div className="grid min-h-[88vh] lg:grid-cols-[260px_minmax(0,1fr)_320px]">
+          {/* Left Sidebar */}
           <aside className="border-b border-zinc-900/80 bg-zinc-950/80 p-8 lg:border-b-0 lg:border-r">
             <div className="text-3xl font-black uppercase tracking-[0.12em] text-white">
               Greg
@@ -216,7 +225,7 @@ export default function GregPortfolioSite() {
               Cunningham
             </div>
 
-            <div className="mt-12 space-y-4 text-[15px] text-zinc-400">
+            <nav className="mt-12 space-y-4 text-[15px] text-zinc-400">
               {navItems.map((item) => (
                 <a
                   key={item.label}
@@ -227,7 +236,7 @@ export default function GregPortfolioSite() {
                   <span>{item.label}</span>
                 </a>
               ))}
-            </div>
+            </nav>
 
             <div className="mt-16">
               <div className="text-sm uppercase tracking-[0.18em] text-zinc-500">Find me on</div>
@@ -249,12 +258,19 @@ export default function GregPortfolioSite() {
             </div>
           </aside>
 
+          {/* Main Content */}
           <main className="border-b border-zinc-900/80 p-8 md:p-12 lg:border-b-0 lg:border-r">
             <section id="profile">
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
                 <motion.div
                   className="h-40 w-40 border border-zinc-700 bg-[linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.01))] p-3"
-                  animate={{ boxShadow: ["0 0 0 rgba(255,255,255,0.0)", "0 0 24px rgba(255,255,255,0.05)", "0 0 0 rgba(255,255,255,0.0)"] }}
+                  animate={{
+                    boxShadow: [
+                      "0 0 0px rgba(255,255,255,0.0)",
+                      "0 0 24px rgba(255,255,255,0.05)",
+                      "0 0 0px rgba(255,255,255,0.0)",
+                    ],
+                  }}
                   transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
                 >
                   <div className="flex h-full w-full items-center justify-center border border-zinc-800 bg-zinc-950 text-5xl font-black text-zinc-300">
@@ -270,10 +286,22 @@ export default function GregPortfolioSite() {
                   animate={{ opacity: 1 }}
                   transition={{ delay: 1.7, duration: 0.6 }}
                 >
-                  <div className="flex gap-4"><span className="text-zinc-500">┆</span><span>Builder across logistics, systems, operations, and AI.</span></div>
-                  <div className="flex gap-4"><span className="text-zinc-500">┆</span><span>Running Fine Finish workflows and growing Dump &amp; Go.</span></div>
-                  <div className="flex gap-4"><span className="text-zinc-500">┆</span><span>Designing ventures in CAD, automation, and product infrastructure.</span></div>
-                  <div className="flex gap-4"><span className="text-zinc-500">┆</span><span>Documenting the process while building in the real world.</span></div>
+                  <div className="flex gap-4">
+                    <span className="text-zinc-500">┆</span>
+                    <span>Builder across logistics, systems, operations, and AI.</span>
+                  </div>
+                  <div className="flex gap-4">
+                    <span className="text-zinc-500">┆</span>
+                    <span>Running Fine Finish workflows and growing Dump &amp; Go.</span>
+                  </div>
+                  <div className="flex gap-4">
+                    <span className="text-zinc-500">┆</span>
+                    <span>Designing ventures in CAD, automation, and product infrastructure.</span>
+                  </div>
+                  <div className="flex gap-4">
+                    <span className="text-zinc-500">┆</span>
+                    <span>Documenting the process while building in the real world.</span>
+                  </div>
                 </motion.div>
 
                 <motion.div
@@ -282,7 +310,9 @@ export default function GregPortfolioSite() {
                   animate={{ opacity: 1 }}
                   transition={{ delay: 2.05, duration: 0.6 }}
                 >
-                  I operate in the overlap between trades, entrepreneurship, technical infrastructure, and product design. My work is rooted in execution first — building businesses, systems, and tools that are useful in the field and durable over time.
+                  I operate in the overlap between trades, entrepreneurship, technical infrastructure, and product
+                  design. My work is rooted in execution first — building businesses, systems, and tools that are
+                  useful in the field and durable over time.
                 </motion.div>
 
                 <motion.div
@@ -291,8 +321,12 @@ export default function GregPortfolioSite() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 2.25, duration: 0.45 }}
                 >
-                  <PixelButton href="#projects">View projects <ArrowRight className="h-4 w-4" /></PixelButton>
-                  <PixelButton href="#contact" muted>Contact</PixelButton>
+                  <PixelButton href="#projects">
+                    View projects <ArrowRight className="h-4 w-4" />
+                  </PixelButton>
+                  <PixelButton href="#contact" muted>
+                    Contact
+                  </PixelButton>
                 </motion.div>
               </motion.div>
             </section>
@@ -308,9 +342,7 @@ export default function GregPortfolioSite() {
                     viewport={{ once: true, amount: 0.3 }}
                     transition={{ delay: index * 0.08, duration: 0.35 }}
                   >
-                    <div className="text-xl font-bold uppercase tracking-[0.08em] text-white">
-                      {item.role}
-                    </div>
+                    <div className="text-xl font-bold uppercase tracking-[0.08em] text-white">{item.role}</div>
                     <div className="mt-1 text-sm uppercase tracking-[0.18em] text-zinc-500">{item.company}</div>
                     <p className="mt-3 max-w-2xl leading-7 text-zinc-400">{item.desc}</p>
                   </motion.div>
@@ -333,7 +365,7 @@ export default function GregPortfolioSite() {
                   >
                     <div className="flex items-center justify-between gap-4">
                       <div className="text-xl font-bold uppercase tracking-[0.08em] text-white">{project.name}</div>
-                      <ExternalLink className="h-4 w-4 text-zinc-500 transition group-hover:text-zinc-200 group-hover:translate-x-1" />
+                      <ExternalLink className="h-4 w-4 flex-shrink-0 text-zinc-500 transition group-hover:translate-x-1 group-hover:text-zinc-200" />
                     </div>
                     <p className="mt-2 max-w-2xl leading-7 text-zinc-400">{project.desc}</p>
                   </motion.a>
@@ -350,8 +382,14 @@ export default function GregPortfolioSite() {
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.5 }}
               >
-                <div className="flex gap-4"><span className="text-zinc-600">┆</span><span>Build logs, systems thinking, and lessons from operating across industries.</span></div>
-                <div className="flex gap-4"><span className="text-zinc-600">┆</span><span>Future home for essays, project notes, and real-time updates.</span></div>
+                <div className="flex gap-4">
+                  <span className="text-zinc-600">┆</span>
+                  <span>Build logs, systems thinking, and lessons from operating across industries.</span>
+                </div>
+                <div className="flex gap-4">
+                  <span className="text-zinc-600">┆</span>
+                  <span>Future home for essays, project notes, and real-time updates.</span>
+                </div>
               </motion.div>
             </section>
 
@@ -365,21 +403,30 @@ export default function GregPortfolioSite() {
                 transition={{ duration: 0.4 }}
               >
                 <PixelButton href="mailto:you@example.com">Email</PixelButton>
-                <PixelButton href="#" muted>LinkedIn</PixelButton>
-                <PixelButton href="#" muted>GitHub</PixelButton>
+                <PixelButton href="#" muted>
+                  LinkedIn
+                </PixelButton>
+                <PixelButton href="#" muted>
+                  GitHub
+                </PixelButton>
               </motion.div>
             </section>
           </main>
 
+          {/* Right Sidebar */}
           <aside className="p-8 md:p-10">
             <motion.div
               className="border border-zinc-800 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))] p-6"
-              animate={{ y: [0, -2, 0], borderColor: ["rgba(39,39,42,1)", "rgba(82,82,91,1)", "rgba(39,39,42,1)"] }}
+              animate={{
+                y: [0, -2, 0],
+                borderColor: ["rgba(39,39,42,1)", "rgba(82,82,91,1)", "rgba(39,39,42,1)"],
+              }}
               transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
             >
               <div className="text-2xl font-black tracking-[0.04em] text-white">Current build mode</div>
               <p className="mt-5 text-lg leading-8 text-zinc-300">
-                Building real businesses while designing future-facing systems in AI, logistics, infrastructure, and product development.
+                Building real businesses while designing future-facing systems in AI, logistics, infrastructure, and
+                product development.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <PixelButton href="#projects">See work</PixelButton>
