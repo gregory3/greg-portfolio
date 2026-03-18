@@ -141,7 +141,7 @@ function BackgroundCode() {
   );
 }
 
-function PixelButton({ href, children, muted = false }) {
+function PixelButton({ href, children, muted = false }: { href: string; children: React.ReactNode; muted?: boolean }) {
   return (
     <a
       href={href}
@@ -156,7 +156,7 @@ function PixelButton({ href, children, muted = false }) {
   );
 }
 
-function SectionTitle({ children }) {
+function SectionTitle({ children }: { children: React.ReactNode }) {
   return <h2 className="text-base uppercase tracking-[0.2em] text-zinc-300">{children}</h2>;
 }
 
