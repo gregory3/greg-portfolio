@@ -56,11 +56,19 @@ const socials = [
   { label: "Website", icon: Globe, href: "#" },
 ];
 
+type CodeStream = {
+  id: number;
+  x: string;
+  chars: string[];
+  opacity: number;
+  duration: number;
+  delay: number;
+};
+
 function BackgroundCode() {
   const columns = 22;
   const rows = 34;
-  const [mounted, setMounted] = useState(false);
-  const [streams, setStreams] = useState(() =>
+  const createStreams = (): CodeStream[] =>
     Array.from({ length: columns }, (_, col) => ({
       id: col,
       x: `${(col / columns) * 100}%`,
@@ -68,28 +76,35 @@ function BackgroundCode() {
       opacity: 0.08 + Math.random() * 0.2,
       duration: 10 + Math.random() * 12,
       delay: Math.random() * 6,
-    }))
-  );
+    }));
+
+    const [streams, setStreams] = useState<CodeStream[]>([]);
 
   useEffect(() => {
-    setMounted(true);
-    const interval = setInterval(() => {
-      setStreams((prev) =>
-        prev.map((stream) => ({
-          ...stream,
-          chars: stream.chars.map((char, index) => {
-            const chance = index % 3 === 0 ? 0.22 : 0.1;
-            return Math.random() < chance ? (char === "1" ? "0" : "1") : char;
-          }),
-          opacity: 0.06 + Math.random() * 0.24,
-        }))
-      );
-    }, 220);
+      let interval: ReturnType<typeof setInterval> | undefined;
+    const timeout = setTimeout(() => {
+      setStreams(createStreams());
+      interval = setInterval(() => {
+        setStreams((prev) =>
+          prev.map((stream) => ({
+            ...stream,
+            chars: stream.chars.map((char, index) => {
+              const chance = index % 3 === 0 ? 0.22 : 0.1;
+              return Math.random() < chance ? (char === "1" ? "0" : "1") : char;
+            }),
+            opacity: 0.06 + Math.random() * 0.24,
+          }))
+        );
+      }, 220);
+    }, 0);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearTimeout(timeout);
+      if (interval) clearInterval(interval);
+    };
   }, []);
 
-  if (!mounted) return null;
+   if (!streams.length) return null;
 
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -163,11 +178,10 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
 function TypewriterTitle() {
   const fullText = "Hi, I'm Greg Cunningham.";
   const [displayed, setDisplayed] = useState("");
-  const [mounted, setMounted] = useState(false);
+
 
   useEffect(() => {
-    setMounted(true);
-    let interval;
+    let interval: ReturnType<typeof setInterval> | undefined;
     const timeout = setTimeout(() => {
       let index = 0;
       interval = setInterval(() => {
@@ -185,7 +199,7 @@ function TypewriterTitle() {
 
   return (
     <div className="mt-10 flex items-center gap-2 text-4xl font-black tracking-[0.04em] text-white md:text-5xl">
-      <span>{mounted ? displayed : ""}</span>
+      <span>{displayed}</span>
       <motion.span
         className="inline-block h-[1.05em] w-[0.6ch] bg-zinc-200"
         animate={{ opacity: [1, 0, 1] }}
