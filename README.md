@@ -1,36 +1,89 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Greg Cunningham Portfolio
 
-## Getting Started
+A personal portfolio built with Next.js App Router, React, Tailwind CSS, Framer Motion, and `lucide-react`.
 
-First, run the development server:
+## What is in the site
+
+- A fixed left-hand profile and navigation panel on desktop
+- A homepage with profile, experience, projects, writing, and contact sections
+- Dedicated pages for resume, about, and hobbies
+- Project cards with a `Load more projects` interaction
+- Pop-out detail modals for both Projects and Writing
+
+## Project structure
+
+```text
+app/
+  about/page.tsx      About page
+  hobbies/page.tsx    Hobbies page
+  layout.tsx          App shell and metadata
+  page.tsx            Homepage and interactive sections
+  resume/page.tsx     Resume preview/download page
+public/
+  resume.pdf          Resume PDF placeholder path
+```
+
+## Getting started
+
+Install dependencies and start the development server:
+
+```bash
+npm install
+npm run dev
+```
+
+Open `http://localhost:3000`.
+
+## Common edits
+
+### Update navigation or homepage content
+
+- Edit `navItems`, `experience`, `projects`, `writingItems`, and `socials` in `app/page.tsx`
+- These arrays drive most of the homepage UI
+
+### Change project cards or writing pop-outs
+
+- Update the objects in `projects` or `writingItems` in `app/page.tsx`
+- The modal content is pulled directly from those objects
+
+### Update the resume page
+
+- Place the latest PDF at `public/resume.pdf`
+- The page at `app/resume/page.tsx` previews and downloads that file automatically
+
+### Update the About or Hobbies pages
+
+- Edit `app/about/page.tsx`
+- Edit `app/hobbies/page.tsx`
+
+## Development notes
+
+- `app/page.tsx` is a client component because it uses animation, state, and modal interactions
+- The left sidebar is intentionally sticky without its own scroll area
+- Modal close behavior supports both overlay click and `Escape`
+- The homepage initially shows 4 projects, then reveals more in batches
+
+## Scripts
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run build
+npm run start
+npm run lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Verification
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Run:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run lint
+```
 
-## Learn More
+## Tech stack
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Next.js 16
+- React 19
+- Tailwind CSS 4
+- Framer Motion
+- lucide-react
