@@ -14,8 +14,10 @@ import {
 const navItems = [
   { label: "Profile", href: "#profile" },
   { label: "Experience", href: "#experience" },
+  { label: "Resume", href: "#resume" },
   { label: "Projects", href: "#projects" },
   { label: "Writing", href: "#writing" },
+  {label: "Hobbies", href: "#hobbies" },
   { label: "Connect", href: "#contact" },
 ];
 
@@ -31,15 +33,15 @@ const experience = [
     role: "Co-Owner",
     company: "Dump & Go",
     period: "Current",
-    desc: "Building and scaling a dumpster and logistics company through operational systems, quoting strategy, and field execution.",
+    desc: "Building and scaling a dumpster and logistics company through customer-focused operational systems, quoting strategy, and field execution.",
     tags: ["Operations", "Logistics", "Growth"],
   },
   {
-    role: "Founder / Builder",
-    company: "Independent Ventures",
-    period: "Ongoing",
-    desc: "Designing products across AI, CAD, automation, and real-world business infrastructure.",
-    tags: ["AI", "CAD", "Product Design"],
+    role: "Technical Engineer / Product Designer",
+    company: "C2 Ventures",
+    period: "2017-2021",
+    desc: "Designed and launched full-stack websites for venture capital firms, integrating secure IAM and malware detection with custom CMS and analytics dashboards.",
+    tags: ["Startup", "Analytics", "Product Design"],
   },
 ];
 
@@ -54,7 +56,7 @@ const projects = [
     name: "Kad",
     desc: "Text-to-CAD and generative design tooling for faster, more intuitive creation.",
     tags: ["CAD", "AI", "Design"],
-    status: "In Progress",
+    status: "Testing",
   },
   {
     name: "GenScape",
