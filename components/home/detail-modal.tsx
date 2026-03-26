@@ -80,7 +80,7 @@ export function DetailModal({
             </button>
           </div>
 
-          <p className="mt-5 text-[14px] leading-8 text-zinc-400">{body}</p>
+          <p className="mt-5 text-[14px] leading-8 text-zinc-300">{body}</p>
 
           {imageSrc ? (
             <div className="mt-6 overflow-hidden border border-zinc-900 bg-[#050505]">
@@ -96,7 +96,7 @@ export function DetailModal({
                 />
               </div>
               {imageCaption ? (
-                <p className="border-t border-zinc-900 px-4 py-3 text-[12px] leading-6 text-zinc-500">
+                <p className="border-t border-zinc-900 px-4 py-3 text-[12px] leading-6 text-zinc-400">
                   {imageCaption}
                 </p>
               ) : null}
@@ -112,7 +112,7 @@ export function DetailModal({
                 {highlights.map((item) => (
                   <div
                     key={item}
-                    className="flex items-start gap-3 text-[13px] leading-6 text-zinc-500"
+                    className="flex items-start gap-3 text-[13px] leading-6 text-zinc-300"
                   >
                     <span className="mt-1 text-zinc-700">-</span>
                     <span>{item}</span>

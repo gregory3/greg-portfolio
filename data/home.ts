@@ -129,7 +129,7 @@ export const projects: ProjectItem[] = [
     name: "Shop Automation Stack",
     desc: "Internal systems for CNC workflows, file handling, infrastructure, and process reliability.",
     tags: ["CNC", "Automation"],
-    status: "Active",
+    status: "Back-Burner",
     detail:
       "The automation stack connects real shop needs to technical systems. It covers repeatable production processes, cleaner file movement, and infrastructure that helps work stay consistent.",
     highlights: [
@@ -145,13 +145,29 @@ export const projects: ProjectItem[] = [
     name: "America Made UAS",
     desc: "Drone Autonomous theory startup",
     tags: ["CNC", "Automation"],
-    status: "Active",
+    status: "Submitted",
     detail:
       "Engineered and developed a business model for an autonomous drone company combating real-world problems for public safety and firstresponders.",
     highlights: [
       "TAK integration for real-time situational awareness",
       "Autonomous flight systems for rapid deployment",
       "American Made certification for government contracting",
+    ],
+    imageSrc: "/projects/shop-automation.jpg",
+    imageAlt: "Shop automation stack preview",
+    imageCaption: "Representative visual for the CNC and automation workflow stack.",
+  },
+  {
+    name: "Brossi Enterprises",
+    desc: "Problem Solving hub for small businesses",
+    tags: ["Advisory", "Capital"],
+    status: "Active",
+    detail:
+      "One stop shop for problem solving and advisory services for small businesses.",
+    highlights: [
+      "How to and do it yourself guides for small business owners",
+      "Network of vetted service providers for small businesses",
+      "Capital access for small businesses with a focus on underserved communities",
     ],
     imageSrc: "/projects/shop-automation.jpg",
     imageAlt: "Shop automation stack preview",
@@ -177,8 +193,8 @@ export const writingItems: WritingItem[] = [
     ],
   },
   {
-    slug: "why-systems-beat-hustle",
-    title: "Why Systems Beat Hustle",
+    slug: "Can-systems-beat-hustle",
+    title: "Can Systems Beat Hustle",
     blurb:
       "Notes on replacing reactive work with infrastructure that compounds over time.",
     type: "Notes",

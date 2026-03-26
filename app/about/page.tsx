@@ -27,7 +27,7 @@ export default function AboutPage() {
             Builder, operator, and systems thinker
           </h1>
 
-          <div className="mt-8 space-y-5 text-[14px] leading-8 text-zinc-400">
+          <div className="mt-8 space-y-5 text-[14px] leading-8 text-zinc-300">
             <p>
               My background sits at the intersection of trades, business
               operations, technical systems, and product design. I like work
@@ -54,7 +54,7 @@ export default function AboutPage() {
               {principles.map((principle) => (
                 <div
                   key={principle}
-                  className="flex items-start gap-3 text-[13px] leading-7 text-zinc-500"
+                  className="flex items-start gap-3 text-[13px] leading-7 text-zinc-300"
                 >
                   <span className="mt-1 text-zinc-700">-</span>
                   <span>{principle}</span>

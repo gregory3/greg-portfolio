@@ -60,7 +60,7 @@ export default async function WritingPage({ params }: WritingPageProps) {
           <h1 className="mt-3 text-3xl font-black uppercase tracking-[0.08em] text-white">
             {post.title}
           </h1>
-          <p className="mt-5 max-w-3xl text-[14px] leading-8 text-zinc-400">
+          <p className="mt-5 max-w-3xl text-[14px] leading-8 text-zinc-300">
             {post.detail}
           </p>
 
@@ -71,7 +71,7 @@ export default async function WritingPage({ params }: WritingPageProps) {
               {post.body.map((paragraph) => (
                 <p
                   key={paragraph}
-                  className="text-[14px] leading-8 text-zinc-400"
+                  className="text-[14px] leading-8 text-zinc-300"
                 >
                   {paragraph}
                 </p>

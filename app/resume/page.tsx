@@ -25,7 +25,7 @@ export default function ResumePage() {
               <h1 className="mt-3 text-3xl font-black uppercase tracking-[0.08em] text-white">
                 Greg Cunningham
               </h1>
-              <p className="mt-4 max-w-2xl text-[14px] leading-8 text-zinc-400">
+              <p className="mt-4 max-w-2xl text-[14px] leading-8 text-zinc-300">
                 Operations, systems, logistics, AI product building, and
                 technical execution across real-world businesses.
               </p>
@@ -50,7 +50,7 @@ export default function ResumePage() {
             />
           </div>
 
-          <p className="mt-4 text-[12px] leading-6 text-zinc-600">
+          <p className="mt-4 text-[12px] leading-6 text-zinc-400">
             If the preview is blank, add your PDF at `public/cunninghamresume.pdf` and
             reload the page.
           </p>

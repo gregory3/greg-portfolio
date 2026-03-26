@@ -56,7 +56,7 @@ export function HomepageSections({
           </motion.div>
 
           <motion.p
-            className="mt-8 max-w-2xl border-l-2 border-zinc-800 pl-5 text-[14px] leading-8 text-zinc-500"
+            className="mt-8 max-w-2xl border-l-2 border-zinc-800 pl-5 text-[14px] leading-8 text-zinc-300"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 2.0, duration: 0.6 }}
@@ -109,10 +109,10 @@ export function HomepageSections({
                   <h3 className="text-[15px] font-bold uppercase tracking-[0.06em] text-white">
                     {item.role}
                   </h3>
-                  <span className="text-[13px] text-zinc-600">{item.company}</span>
+                  <span className="text-[13px] text-zinc-400">{item.company}</span>
                 </div>
 
-                <p className="mt-2 max-w-xl text-[13px] leading-7 text-zinc-600">
+                <p className="mt-2 max-w-xl text-[13px] leading-7 text-zinc-300">
                   {item.desc}
                 </p>
 
@@ -198,7 +198,7 @@ export function HomepageSections({
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.4 }}
         >
-          <p className="max-w-lg text-[13px] leading-7 text-zinc-600">
+          <p className="max-w-lg text-[13px] leading-7 text-zinc-300">
             Building something interesting? Want to talk operations, AI, or
             product? Reach out, always open to good conversations.
           </p>

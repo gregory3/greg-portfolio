@@ -30,7 +30,7 @@ export function DetailCard({
         <ExternalLink className="h-3 w-3 flex-shrink-0 text-zinc-800 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-zinc-500" />
       </div>
 
-      <p className="mt-2 text-[12px] leading-6 text-zinc-600">{summary}</p>
+      <p className="mt-2 text-[12px] leading-6 text-zinc-300">{summary}</p>
 
       <div className="mt-4 flex items-center justify-between gap-2">
         <div className="flex flex-wrap gap-1.5">
