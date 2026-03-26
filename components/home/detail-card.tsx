@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import { Tag } from "@/components/home/tag";
 
@@ -8,7 +9,8 @@ type DetailCardProps = {
   summary: string;
   meta: string;
   tags?: string[];
-  onOpen: () => void;
+  onOpen?: () => void;
+  href?: string;
 };
 
 export function DetailCard({
@@ -17,13 +19,10 @@ export function DetailCard({
   meta,
   tags,
   onOpen,
+  href,
 }: DetailCardProps) {
-  return (
-    <button
-      type="button"
-      onClick={onOpen}
-      className="group block w-full border border-zinc-900 p-5 text-left transition hover:border-zinc-700 hover:bg-white/[0.02]"
-    >
+  const content = (
+    <>
       <div className="flex items-start justify-between gap-2">
         <h3 className="text-[13px] font-bold uppercase tracking-[0.1em] text-white">
           {title}
@@ -43,6 +42,27 @@ export function DetailCard({
           {meta}
         </span>
       </div>
+    </>
+  );
+
+  if (href) {
+    return (
+      <Link
+        href={href}
+        className="group block w-full border border-zinc-900 p-5 text-left transition hover:border-zinc-700 hover:bg-white/[0.02]"
+      >
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      className="group block w-full border border-zinc-900 p-5 text-left transition hover:border-zinc-700 hover:bg-white/[0.02]"
+    >
+      {content}
     </button>
   );
 }

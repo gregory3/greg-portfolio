@@ -20,13 +20,19 @@ export type ProjectItem = {
   status: string;
   detail: string;
   highlights: string[];
+  imageSrc?: string;
+  imageAlt?: string;
+  imageCaption?: string;
 };
 
 export type WritingItem = {
+  slug: string;
   title: string;
   blurb: string;
   type: string;
   detail: string;
+  body: string[];
+  publishedLabel?: string;
 };
 
 export type SocialItem = {

@@ -7,13 +7,12 @@ import { DetailModal } from "@/components/home/detail-modal";
 import { HomepageSections } from "@/components/home/homepage-sections";
 import { Sidebar } from "@/components/home/sidebar";
 import { navItems, projects, socials, stats } from "@/data/home";
-import type { ProjectItem, WritingItem } from "@/types/home";
+import type { ProjectItem } from "@/types/home";
 
 export default function Page() {
   const initialVisibleProjects = 4;
   const [visibleProjects, setVisibleProjects] = useState(initialVisibleProjects);
   const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(null);
-  const [selectedWriting, setSelectedWriting] = useState<WritingItem | null>(null);
 
   return (
     <div className="relative min-h-screen bg-[#060606] font-mono text-zinc-100">
@@ -37,7 +36,6 @@ export default function Page() {
             setVisibleProjects((current) => Math.min(current + 2, projects.length))
           }
           onOpenProject={setSelectedProject}
-          onOpenWriting={setSelectedWriting}
         />
       </div>
 
@@ -48,18 +46,10 @@ export default function Page() {
             meta={`Project | ${selectedProject.status}`}
             body={selectedProject.detail}
             highlights={selectedProject.highlights}
+            imageSrc={selectedProject.imageSrc}
+            imageAlt={selectedProject.imageAlt}
+            imageCaption={selectedProject.imageCaption}
             onClose={() => setSelectedProject(null)}
-          />
-        ) : null}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {selectedWriting ? (
-          <DetailModal
-            title={selectedWriting.title}
-            meta={`Writing | ${selectedWriting.type}`}
-            body={selectedWriting.detail}
-            onClose={() => setSelectedWriting(null)}
           />
         ) : null}
       </AnimatePresence>

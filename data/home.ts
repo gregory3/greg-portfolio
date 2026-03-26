@@ -57,6 +57,9 @@ export const projects: ProjectItem[] = [
       "Narrative timelines built from photos",
       "Consumer-friendly AI storytelling flows",
     ],
+    imageSrc: "/projects/backsnap.jpg",
+    imageAlt: "BackSnap project preview",
+    imageCaption: "Concept preview for the BackSnap storytelling experience.",
   },
   {
     name: "Kad",
@@ -70,6 +73,9 @@ export const projects: ProjectItem[] = [
       "Rapid concept iteration",
       "Manufacturing-minded workflows",
     ],
+    imageSrc: "/projects/kad.jpg",
+    imageAlt: "Kad generative CAD interface preview",
+    imageCaption: "Early direction for the text-to-CAD workflow inside Kad.",
   },
   {
     name: "GenScape",
@@ -83,6 +89,9 @@ export const projects: ProjectItem[] = [
       "Plant-aware design suggestions",
       "Faster client presentation mockups",
     ],
+    imageSrc: "/projects/genscape.jpg",
+    imageAlt: "GenScape landscape design preview",
+    imageCaption: "Visual mockup showing the GenScape landscape planning style.",
   },
   {
     name: "Tech Hub",
@@ -96,6 +105,9 @@ export const projects: ProjectItem[] = [
       "Local inference experiments",
       "Automation and security testing",
     ],
+    imageSrc: "/projects/tech-hub.jpg",
+    imageAlt: "Tech Hub infrastructure dashboard preview",
+    imageCaption: "A snapshot representing the internal Tech Hub lab environment.",
   },
   {
     name: "Dump & Go Systems",
@@ -109,6 +121,9 @@ export const projects: ProjectItem[] = [
       "Operational visibility improvements",
       "Tools shaped by real field work",
     ],
+    imageSrc: "/projects/dump-go.jpg",
+    imageAlt: "Dump and Go systems workflow preview",
+    imageCaption: "Operational tooling concept for quoting and logistics visibility.",
   },
   {
     name: "Shop Automation Stack",
@@ -122,35 +137,82 @@ export const projects: ProjectItem[] = [
       "Automation around repetitive tasks",
       "Practical infrastructure for the shop floor",
     ],
+    imageSrc: "/projects/shop-automation.jpg",
+    imageAlt: "Shop automation stack preview",
+    imageCaption: "Representative visual for the CNC and automation workflow stack.",
+  },
+  {
+    name: "America Made UAS",
+    desc: "Drone Autonomous theory startup",
+    tags: ["CNC", "Automation"],
+    status: "Active",
+    detail:
+      "Engineered and developed a business model for an autonomous drone company combating real-world problems for public safety and firstresponders.",
+    highlights: [
+      "TAK integration for real-time situational awareness",
+      "Autonomous flight systems for rapid deployment",
+      "American Made certification for government contracting",
+    ],
+    imageSrc: "/projects/shop-automation.jpg",
+    imageAlt: "Shop automation stack preview",
+    imageCaption: "Representative visual for the CNC and automation workflow stack.",
   },
 ];
 
 export const writingItems: WritingItem[] = [
   {
+    slug: "building-across-trades-and-tech",
     title: "Building Across Trades and Tech",
     blurb:
       "What changes when product thinking is grounded in operations, machines, and the real world.",
     type: "Essay",
     detail:
       "This piece is about the advantage of building from field experience instead of theory alone. It connects trade work, systems thinking, and product decisions that stay useful under pressure.",
+    publishedLabel: "Featured Essay",
+    body: [
+      "A lot of software gets imagined far away from the actual work it is supposed to support. When that happens, the result often looks polished but feels disconnected once it hits a real shop, a real field team, or a real operating business.",
+      "Building across trades and tech changes that. You start to notice where tools create friction, where a workflow breaks down under time pressure, and where a seemingly small detail matters because it affects whether someone can actually get through the day cleanly.",
+      "That is the lens I keep coming back to. Product thinking becomes stronger when it is informed by operations, by repetition, by physical constraints, and by people who do not have time for extra complexity. The goal is not to add software for the sake of software. The goal is to create something that makes the work clearer, faster, or more reliable.",
+      "That approach also changes how I think about AI. The interesting question is not whether a system can do something impressive in isolation. The real question is whether it can fit into the rhythm of the work without introducing new confusion. When a tool respects the environment it is entering, it becomes much easier to trust and keep using.",
+    ],
   },
   {
+    slug: "why-systems-beat-hustle",
     title: "Why Systems Beat Hustle",
     blurb:
       "Notes on replacing reactive work with infrastructure that compounds over time.",
     type: "Notes",
     detail:
       "A deeper look at how operating systems, documentation, and repeatable workflows create leverage. The writing leans practical, with examples from logistics, shop operations, and technical setup.",
+    publishedLabel: "Operating Notes",
+    body: [
+      "Hustle can get something off the ground, but it is a weak long-term operating model. It depends too much on memory, urgency, and individual effort. That usually works right up until the work scales, gets busy, or depends on other people.",
+      "Systems are what turn effort into leverage. A good system does not need to be complicated. It might just be a cleaner intake process, a better naming convention, a documented handoff, or a repeatable checklist that removes guesswork. Small systems can create a surprising amount of momentum because they reduce the mental load of doing the work well.",
+      "What matters is compounding. A process that saves ten minutes once is not very interesting. A process that saves ten minutes every day across a team, while reducing mistakes at the same time, starts to shape the business in a more meaningful way.",
+      "That is why I usually trust infrastructure over adrenaline. Hustle is sometimes necessary. Systems are what let you keep growing without having to relive the same problems over and over again.",
+    ],
   },
   {
+    slug: "ai-that-helps-people-work",
     title: "AI That Helps People Work",
     blurb:
       "Exploring a grounded approach to automation that supports execution instead of hype.",
     type: "Draft",
     detail:
       "This writing focuses on building AI tools that fit inside existing workflows. Instead of novelty for its own sake, the emphasis is on speed, clarity, and better decisions for working teams.",
+    publishedLabel: "Draft in Progress",
+    body: [
+      "A useful AI tool should make someone feel more capable, not more dependent. That sounds obvious, but a lot of AI products still optimize for surprise instead of utility. They demo well, but they do not always hold up inside the practical messiness of day-to-day work.",
+      "The better path is usually narrower and more grounded. Start with a real task, understand the existing workflow, and look for places where a model can reduce friction without forcing people to relearn everything around it. That might mean summarizing context faster, preparing a first draft, helping with classification, or making a complex system easier to query.",
+      "The reason I care about that framing is simple: teams adopt tools that help them move. They do not adopt tools just because the underlying technology is interesting. The measure is whether the output is clearer, faster, and more reliable in context.",
+      "That is the kind of AI I want to build more of. Not just impressive systems, but practical ones that actually earn a place in the workflow.",
+    ],
   },
 ];
+
+export function getWritingBySlug(slug: string) {
+  return writingItems.find((item) => item.slug === slug);
+}
 
 export const socials: SocialItem[] = [
   { label: "Email", icon: Mail, href: "mailto:gregorycunninghamglc@gmail.com" },

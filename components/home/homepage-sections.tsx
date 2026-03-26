@@ -13,20 +13,18 @@ import {
   projects,
   writingItems,
 } from "@/data/home";
-import type { ProjectItem, WritingItem } from "@/types/home";
+import type { ProjectItem } from "@/types/home";
 
 type HomepageSectionsProps = {
   visibleProjects: number;
   onLoadMoreProjects: () => void;
   onOpenProject: (project: ProjectItem) => void;
-  onOpenWriting: (item: WritingItem) => void;
 };
 
 export function HomepageSections({
   visibleProjects,
   onLoadMoreProjects,
   onOpenProject,
-  onOpenWriting,
 }: HomepageSectionsProps) {
   return (
     <main className="min-w-0 flex-1 pb-24 lg:py-16 lg:pl-16">
@@ -183,7 +181,7 @@ export function HomepageSections({
               title={item.title}
               summary={item.blurb}
               meta={item.type}
-              onOpen={() => onOpenWriting(item)}
+              href={`/writing/${item.slug}`}
             />
           ))}
         </div>

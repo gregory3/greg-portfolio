@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
+import Image from "next/image";
 import { useEffect } from "react";
 
 type DetailModalProps = {
@@ -9,6 +10,9 @@ type DetailModalProps = {
   meta: string;
   body: string;
   highlights?: string[];
+  imageSrc?: string;
+  imageAlt?: string;
+  imageCaption?: string;
   onClose: () => void;
 };
 
@@ -17,6 +21,9 @@ export function DetailModal({
   meta,
   body,
   highlights,
+  imageSrc,
+  imageAlt,
+  imageCaption,
   onClose,
 }: DetailModalProps) {
   useEffect(() => {
@@ -74,6 +81,27 @@ export function DetailModal({
           </div>
 
           <p className="mt-5 text-[14px] leading-8 text-zinc-400">{body}</p>
+
+          {imageSrc ? (
+            <div className="mt-6 overflow-hidden border border-zinc-900 bg-[#050505]">
+              {/* Project visuals are optional, so existing entries still work
+                  even when an image has not been added yet. */}
+              <div className="relative aspect-[16/9] w-full">
+                <Image
+                  src={imageSrc}
+                  alt={imageAlt ?? `${title} project image`}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 768px"
+                />
+              </div>
+              {imageCaption ? (
+                <p className="border-t border-zinc-900 px-4 py-3 text-[12px] leading-6 text-zinc-500">
+                  {imageCaption}
+                </p>
+              ) : null}
+            </div>
+          ) : null}
 
           {highlights && highlights.length > 0 ? (
             <div className="mt-6 border-t border-zinc-900 pt-5">
