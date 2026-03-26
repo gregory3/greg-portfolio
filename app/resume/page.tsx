@@ -3,7 +3,7 @@ import { ArrowLeft, Download } from "lucide-react";
 
 export default function ResumePage() {
   // Keep the file path centralized so swapping in a real PDF is a one-line edit.
-  const resumePath = "/resume.pdf";
+  const resumePath = "/cunninghamresume.pdf";
 
   return (
     <main className="min-h-screen bg-[#060606] px-6 py-10 font-mono text-zinc-100 md:px-10">
@@ -51,7 +51,7 @@ export default function ResumePage() {
           </div>
 
           <p className="mt-4 text-[12px] leading-6 text-zinc-600">
-            If the preview is blank, add your PDF at `public/resume.pdf` and
+            If the preview is blank, add your PDF at `public/cunninghamresume.pdf` and
             reload the page.
           </p>
         </div>

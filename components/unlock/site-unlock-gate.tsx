@@ -42,6 +42,7 @@ type InvadersState = {
 };
 
 const UNLOCK_STORAGE_KEY = "greg-portfolio-unlocked";
+const ACCESS_EMAIL_STORAGE_KEY = "greg-portfolio-access-email";
 const DINO_UNLOCK_SCORE = 6;
 
 function createDinoState(): DinoState {
@@ -97,6 +98,10 @@ export function SiteUnlockGate({
   const [invadersState, setInvadersState] = useState<InvadersState>(
     createInvadersState
   );
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [emailStatus, setEmailStatus] = useState("");
+  const [isSubmittingEmail, setIsSubmittingEmail] = useState(false);
   const controlsRef = useRef({ left: false, right: false });
 
   useEffect(() => {
@@ -395,6 +400,103 @@ export function SiteUnlockGate({
               you win, access is remembered on this browser.
             </p>
 
+            <div className="mt-6 grid gap-3 border border-zinc-900 bg-white/[0.02] p-4">
+              <div className="text-[11px] uppercase tracking-[0.16em] text-zinc-500">
+                Scared to lose?
+              </div>
+              <p className="text-[13px] leading-6 text-zinc-400">
+                Skip the game and add your email instead. That unlocks the site
+                right away and saves your info for future follow-up.
+              </p>
+
+              <form
+                className="grid gap-3"
+                onSubmit={async (event) => {
+                  event.preventDefault();
+
+                  const normalizedEmail = email.trim().toLowerCase();
+                  const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+                    normalizedEmail
+                  );
+
+                  if (!isValidEmail) {
+                    setEmailError("Enter a valid email to unlock the site.");
+                    setEmailStatus("");
+                    return;
+                  }
+
+                  try {
+                    setIsSubmittingEmail(true);
+                    setEmailError("");
+                    setEmailStatus("Saving your email...");
+
+                    const response = await fetch("/api/unlock-email", {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({ email: normalizedEmail }),
+                    });
+
+                    const result = (await response.json()) as {
+                      error?: string;
+                    };
+
+                    if (!response.ok) {
+                      setEmailStatus("");
+                      setEmailError(
+                        result.error ?? "We could not save your email just now."
+                      );
+                      return;
+                    }
+
+                    window.localStorage.setItem(
+                      ACCESS_EMAIL_STORAGE_KEY,
+                      normalizedEmail
+                    );
+                    setEmailStatus("Email accepted. Unlocking the portfolio...");
+                    unlockSite(setUnlocked);
+                  } catch {
+                    setEmailStatus("");
+                    setEmailError("Network issue. Please try again in a moment.");
+                  } finally {
+                    setIsSubmittingEmail(false);
+                  }
+                }}
+              >
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(event) => {
+                    setEmail(event.target.value);
+                    if (emailError) {
+                      setEmailError("");
+                    }
+                  }}
+                  placeholder="you@example.com"
+                  disabled={isSubmittingEmail}
+                  className="border border-zinc-800 bg-[#060606] px-4 py-3 text-[13px] text-zinc-100 outline-none transition placeholder:text-zinc-600 focus:border-zinc-500"
+                />
+                <button
+                  type="submit"
+                  disabled={isSubmittingEmail}
+                  className="border border-zinc-700 px-4 py-3 text-[12px] uppercase tracking-[0.14em] text-zinc-200 transition hover:border-zinc-500 hover:text-white"
+                >
+                  {isSubmittingEmail ? "Saving..." : "Add email instead"}
+                </button>
+              </form>
+
+              {emailError ? (
+                <p className="text-[12px] leading-6 text-rose-400">{emailError}</p>
+              ) : null}
+
+              {emailStatus ? (
+                <p className="text-[12px] leading-6 text-emerald-400">
+                  {emailStatus}
+                </p>
+              ) : null}
+            </div>
+
             <div className="mt-8 grid gap-3">
               <button
                 type="button"
@@ -410,6 +512,9 @@ export function SiteUnlockGate({
                 </div>
                 <div className="mt-2 text-[12px] leading-6">
                   Jump 6 obstacles with `Space`, `W`, or `↑`.
+                </div>
+                <div className="mt-2 text-[11px] uppercase tracking-[0.12em] text-zinc-600">
+                  Fast unlock | Timing challenge
                 </div>
               </button>
 
@@ -427,6 +532,9 @@ export function SiteUnlockGate({
                 </div>
                 <div className="mt-2 text-[12px] leading-6">
                   Move with `A` and `D`, fire with `Space`, clear the wave.
+                </div>
+                <div className="mt-2 text-[11px] uppercase tracking-[0.12em] text-zinc-600">
+                  Longer run | More forgiving pace
                 </div>
               </button>
             </div>

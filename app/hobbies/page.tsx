@@ -3,24 +3,23 @@ import { ArrowLeft } from "lucide-react";
 
 const hobbies = [
   {
-    name: "Building and tinkering",
+    name: "Amputee USA Soccer Player",
     detail:
-      "Experimenting with CNC workflows, infrastructure, AI tools, and practical systems outside of formal project work.",
+      "Goalie for the amputee soccer team, which has been competitive and a rewarding way to connect with others and stay active while navigating life with other amputations.",
   },
   {
-    name: "Writing and documenting",
+    name: "Amputee advocacy and community building",
     detail:
-      "Capturing lessons, build notes, and the thinking behind projects while they are still in motion.",
+      "Capturing lessons, sharing stories, and building spaces for connection and support across the amputee community. I also write about these topics on my blog.",},
+  {
+    name: "Personal Caffeine Lab",
+    detail:
+      "Life is a complex system, and understanding it is endlessly fascinating. Hard to sleep when there are so many variables to tinker with, test, and optimize.",
   },
   {
-    name: "Business and growth strategy",
+    name: "Youth Coaching and Mentorship",
     detail:
-      "Studying what makes operations work, where businesses break, and how systems can create real leverage.",
-  },
-  {
-    name: "Hands-on problem solving",
-    detail:
-      "Working across digital tools and physical environments, especially when a solution needs both.",
+      "Assistant Track Coach for a local high school team, which has been a rewarding way to give back, connect with young athletes, and share the lessons from my own athletic journey.",
   },
 ];
 
@@ -69,3 +68,6 @@ export default function HobbiesPage() {
     </main>
   );
 }
+
+
+
