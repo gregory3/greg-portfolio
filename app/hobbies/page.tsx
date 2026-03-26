@@ -15,7 +15,7 @@ const hobbies = [
   {
     name: "Personal Caffeine Lab",
     detail:
-      "Coffee is half ritual, half experiment. I like dialing things in, noticing patterns, and treating even small daily habits like systems worth understanding.",
+      "Naturally driven always engergized dont believe in caffeine. Up before sunrise, and ready to chase the sunset into tomorrow. Strong advoicate for running and healthy habbits to success.",
   },
   {
     name: "Youth Coaching and Mentorship",
