@@ -5,6 +5,7 @@ const principles = [
   "Build things that hold up in the real world.",
   "Use systems to create leverage, not complexity for its own sake.",
   "Stay close to operations, because that is where useful products get shaped.",
+  "Have Fun. If it’s not fun, it’s not worth doing.",
 ];
 
 export default function AboutPage() {
