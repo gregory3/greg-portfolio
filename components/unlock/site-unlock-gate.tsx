@@ -10,6 +10,7 @@ type DinoState = {
   velocity: number;
   obstacleX: number;
   obstacleWidth: number;
+  speed: number;
   score: number;
   message: string;
 };
@@ -43,7 +44,17 @@ type InvadersState = {
 
 const UNLOCK_STORAGE_KEY = "greg-portfolio-unlocked";
 const ACCESS_EMAIL_STORAGE_KEY = "greg-portfolio-access-email";
-const DINO_UNLOCK_SCORE = 6;
+const DINO_UNLOCK_SCORE = 5;
+const LOSSES_BEFORE_EMAIL = 3;
+
+// Dino physics tuned so a well-timed jump comfortably clears an obstacle
+// while a late one clips it. Collision is intentionally simplified to a
+// single x-window plus a jump-height threshold.
+const DINO_GRAVITY = 1.15;
+const DINO_JUMP_VELOCITY = 10.5;
+const DINO_CLEAR_HEIGHT = 30;
+const DINO_BASE_SPEED = 3.4;
+const DINO_MAX_SPEED = 5.4;
 
 function createDinoState(): DinoState {
   return {
@@ -51,9 +62,10 @@ function createDinoState(): DinoState {
     playerY: 0,
     velocity: 0,
     obstacleX: 104,
-    obstacleWidth: 12,
+    obstacleWidth: 10,
+    speed: DINO_BASE_SPEED,
     score: 0,
-    message: "Jump over 6 obstacles to unlock the site.",
+    message: `Clear ${DINO_UNLOCK_SCORE} obstacles to unlock the site.`,
   };
 }
 
@@ -61,11 +73,11 @@ function createInvadersState(): InvadersState {
   const invaders: Invader[] = [];
 
   for (let row = 0; row < 2; row += 1) {
-    for (let col = 0; col < 4; col += 1) {
+    for (let col = 0; col < 5; col += 1) {
       invaders.push({
-        id: row * 4 + col,
-        x: 18 + col * 18,
-        y: 18 + row * 12,
+        id: row * 5 + col,
+        x: 16 + col * 15,
+        y: 16 + row * 12,
         alive: true,
       });
     }
@@ -98,11 +110,15 @@ export function SiteUnlockGate({
   const [invadersState, setInvadersState] = useState<InvadersState>(
     createInvadersState
   );
+  const [losses, setLosses] = useState(0);
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const [emailStatus, setEmailStatus] = useState("");
   const [isSubmittingEmail, setIsSubmittingEmail] = useState(false);
   const controlsRef = useRef({ left: false, right: false });
+  const emailInputRef = useRef<HTMLInputElement>(null);
+
+  const showEmailGate = losses >= LOSSES_BEFORE_EMAIL;
 
   useEffect(() => {
     const timeout = window.setTimeout(() => {
@@ -113,26 +129,48 @@ export function SiteUnlockGate({
     return () => window.clearTimeout(timeout);
   }, []);
 
+  // Count a loss whenever either game transitions into its "lost" phase. The
+  // effect only re-runs when the phase value actually changes, so each loss
+  // is counted once.
+  useEffect(() => {
+    if (dinoState.phase === "lost") {
+      setLosses((count) => count + 1);
+    }
+  }, [dinoState.phase]);
+
+  useEffect(() => {
+    if (invadersState.phase === "lost") {
+      setLosses((count) => count + 1);
+    }
+  }, [invadersState.phase]);
+
+  // Bring the email escape hatch into focus the moment it unlocks.
+  useEffect(() => {
+    if (showEmailGate) {
+      emailInputRef.current?.focus();
+    }
+  }, [showEmailGate]);
+
   useEffect(() => {
     if (!hydrated || unlocked || activeGame !== "dino") {
       return;
     }
 
-    // The dino loop uses a fixed-timestep update so movement stays predictable
-    // even though we are rendering with regular React state updates.
+    // Fixed-timestep update keeps the jump arc predictable regardless of
+    // React's render cadence.
     const interval = window.setInterval(() => {
       setDinoState((current) => {
         if (current.phase !== "running") {
           return current;
         }
 
-        const nextVelocity = current.velocity - 1.25;
+        const nextVelocity = current.velocity - DINO_GRAVITY;
         const nextPlayerY = Math.max(0, current.playerY + nextVelocity);
-        const nextObstacleX = current.obstacleX - 3.8;
+        const nextObstacleX = current.obstacleX - current.speed;
         const overlapsObstacle =
           nextObstacleX < 24 && nextObstacleX + current.obstacleWidth > 12;
 
-        if (overlapsObstacle && nextPlayerY < 18) {
+        if (overlapsObstacle && nextPlayerY < DINO_CLEAR_HEIGHT) {
           return {
             ...current,
             phase: "lost",
@@ -162,10 +200,11 @@ export function SiteUnlockGate({
             ...current,
             playerY: nextPlayerY,
             velocity: nextVelocity,
-            obstacleX: 100 + Math.random() * 18,
-            obstacleWidth: 10 + Math.random() * 5,
+            obstacleX: 100 + Math.random() * 20,
+            obstacleWidth: 8 + Math.random() * 5,
+            speed: Math.min(DINO_MAX_SPEED, current.speed + 0.25),
             score: nextScore,
-            message: `Great run. ${DINO_UNLOCK_SCORE - nextScore} more to go.`,
+            message: `Nice. ${DINO_UNLOCK_SCORE - nextScore} more to unlock.`,
           };
         }
 
@@ -176,7 +215,7 @@ export function SiteUnlockGate({
           obstacleX: nextObstacleX,
         };
       });
-    }, 40);
+    }, 30);
 
     return () => window.clearInterval(interval);
   }, [activeGame, hydrated, unlocked]);
@@ -199,15 +238,15 @@ export function SiteUnlockGate({
         let nextShipX = current.shipX;
 
         if (movement.left) {
-          nextShipX -= 3.6;
+          nextShipX -= 3.8;
         }
         if (movement.right) {
-          nextShipX += 3.6;
+          nextShipX += 3.8;
         }
 
         nextShipX = clamp(nextShipX, 8, 92);
 
-        let nextOffsetX = current.formationOffsetX + current.direction * 2.4;
+        let nextOffsetX = current.formationOffsetX + current.direction * 2.2;
         let nextOffsetY = current.formationOffsetY;
         let nextDirection = current.direction;
 
@@ -226,7 +265,7 @@ export function SiteUnlockGate({
         }
 
         const movedBullets = current.bullets
-          .map((bullet) => ({ ...bullet, y: bullet.y - 6 }))
+          .map((bullet) => ({ ...bullet, y: bullet.y - 6.5 }))
           .filter((bullet) => bullet.y > 0);
 
         const spentBulletIds = new Set<number>();
@@ -256,8 +295,10 @@ export function SiteUnlockGate({
         const nextBullets = movedBullets.filter(
           (bullet) => !spentBulletIds.has(bullet.id)
         );
-        const nextScore =
-          current.score + current.invaders.filter((i) => i.alive).length - nextInvaders.filter((i) => i.alive).length;
+        const killedThisTick =
+          current.invaders.filter((i) => i.alive).length -
+          nextInvaders.filter((i) => i.alive).length;
+        const nextScore = current.score + killedThisTick;
         const remainingInvaders = nextInvaders.filter((invader) => invader.alive);
 
         if (remainingInvaders.length === 0) {
@@ -309,7 +350,7 @@ export function SiteUnlockGate({
           score: nextScore,
         };
       });
-    }, 60);
+    }, 55);
 
     return () => window.clearInterval(interval);
   }, [activeGame, hydrated, unlocked]);
@@ -385,117 +426,148 @@ export function SiteUnlockGate({
   }
 
   return (
-    <div className="min-h-screen bg-[#050505] text-zinc-100">
-      <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col justify-center px-6 py-10 md:px-10">
-        <div className="grid gap-10 lg:grid-cols-[320px_1fr] lg:items-start">
+    <div className="min-h-screen overflow-y-auto bg-[#050505] text-zinc-100">
+      <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col justify-center px-5 py-8 sm:px-6 md:px-10 md:py-10">
+        <div className="grid gap-8 lg:grid-cols-[320px_1fr] lg:items-start lg:gap-10">
           <div>
             <div className="text-[10px] uppercase tracking-[0.22em] text-zinc-600">
               Site Access
             </div>
-            <h1 className="mt-4 text-4xl font-black uppercase tracking-[0.08em] text-white">
+            <h1 className="mt-4 text-3xl font-black uppercase tracking-[0.08em] text-white sm:text-4xl">
               Beat a game to unlock the portfolio
             </h1>
             <p className="mt-5 max-w-md text-[14px] leading-8 text-zinc-400">
-              Pick a mini-game, clear the challenge, and the site opens. Once
+              Pick a mini-game and clear the challenge to open the site. Once
               you win, access is remembered on this browser.
             </p>
 
-            <div className="mt-6 grid gap-3 border border-zinc-900 bg-white/[0.02] p-4">
-              <div className="text-[11px] uppercase tracking-[0.16em] text-zinc-500">
-                Scared to lose?
-              </div>
-              <p className="text-[13px] leading-6 text-zinc-400">
-                Skip the game and add your email instead. That unlocks the site
-                right away and saves your info for future follow-up.
-              </p>
+            <div className="mt-5 flex items-center gap-3 text-[11px] uppercase tracking-[0.16em] text-zinc-600">
+              <span>Attempts lost</span>
+              <span className="flex gap-1.5">
+                {Array.from({ length: LOSSES_BEFORE_EMAIL }, (_, index) => (
+                  <span
+                    key={index}
+                    className={`h-2 w-2 rounded-full border ${
+                      index < losses
+                        ? "border-rose-500 bg-rose-500/70"
+                        : "border-zinc-700"
+                    }`}
+                  />
+                ))}
+              </span>
+            </div>
 
-              <form
-                className="grid gap-3"
-                onSubmit={async (event) => {
-                  event.preventDefault();
+            {showEmailGate ? (
+              <div className="mt-6 grid gap-3 border border-zinc-700 bg-white/[0.03] p-4">
+                <div className="text-[11px] uppercase tracking-[0.16em] text-zinc-400">
+                  {LOSSES_BEFORE_EMAIL} tough breaks — skip the game
+                </div>
+                <p className="text-[13px] leading-6 text-zinc-400">
+                  No shame in it. Drop your email and I&apos;ll open the site
+                  right away. It also gives me a way to follow up.
+                </p>
 
-                  const normalizedEmail = email.trim().toLowerCase();
-                  const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-                    normalizedEmail
-                  );
+                <form
+                  className="grid gap-3"
+                  onSubmit={async (event) => {
+                    event.preventDefault();
 
-                  if (!isValidEmail) {
-                    setEmailError("Enter a valid email to unlock the site.");
-                    setEmailStatus("");
-                    return;
-                  }
+                    const normalizedEmail = email.trim().toLowerCase();
+                    const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+                      normalizedEmail
+                    );
 
-                  try {
-                    setIsSubmittingEmail(true);
-                    setEmailError("");
-                    setEmailStatus("Saving your email...");
-
-                    const response = await fetch("/api/unlock-email", {
-                      method: "POST",
-                      headers: {
-                        "Content-Type": "application/json",
-                      },
-                      body: JSON.stringify({ email: normalizedEmail }),
-                    });
-
-                    const result = (await response.json()) as {
-                      error?: string;
-                    };
-
-                    if (!response.ok) {
+                    if (!isValidEmail) {
+                      setEmailError("Enter a valid email to unlock the site.");
                       setEmailStatus("");
-                      setEmailError(
-                        result.error ?? "We could not save your email just now."
-                      );
                       return;
                     }
 
-                    window.localStorage.setItem(
-                      ACCESS_EMAIL_STORAGE_KEY,
-                      normalizedEmail
-                    );
-                    setEmailStatus("Email accepted. Unlocking the portfolio...");
-                    unlockSite(setUnlocked);
-                  } catch {
-                    setEmailStatus("");
-                    setEmailError("Network issue. Please try again in a moment.");
-                  } finally {
-                    setIsSubmittingEmail(false);
-                  }
-                }}
-              >
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(event) => {
-                    setEmail(event.target.value);
-                    if (emailError) {
+                    try {
+                      setIsSubmittingEmail(true);
                       setEmailError("");
+                      setEmailStatus("Saving your email...");
+
+                      const response = await fetch("/api/unlock-email", {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ email: normalizedEmail }),
+                      });
+
+                      const result = (await response.json()) as {
+                        error?: string;
+                      };
+
+                      if (!response.ok) {
+                        setEmailStatus("");
+                        setEmailError(
+                          result.error ??
+                            "We could not save your email just now."
+                        );
+                        return;
+                      }
+
+                      window.localStorage.setItem(
+                        ACCESS_EMAIL_STORAGE_KEY,
+                        normalizedEmail
+                      );
+                      setEmailStatus(
+                        "Email accepted. Unlocking the portfolio..."
+                      );
+                      unlockSite(setUnlocked);
+                    } catch {
+                      setEmailStatus("");
+                      setEmailError(
+                        "Network issue. Please try again in a moment."
+                      );
+                    } finally {
+                      setIsSubmittingEmail(false);
                     }
                   }}
-                  placeholder="you@example.com"
-                  disabled={isSubmittingEmail}
-                  className="border border-zinc-800 bg-[#060606] px-4 py-3 text-[13px] text-zinc-100 outline-none transition placeholder:text-zinc-600 focus:border-zinc-500"
-                />
-                <button
-                  type="submit"
-                  disabled={isSubmittingEmail}
-                  className="border border-zinc-700 px-4 py-3 text-[12px] uppercase tracking-[0.14em] text-zinc-200 transition hover:border-zinc-500 hover:text-white"
                 >
-                  {isSubmittingEmail ? "Saving..." : "Add email instead"}
-                </button>
-              </form>
+                  <input
+                    ref={emailInputRef}
+                    type="email"
+                    value={email}
+                    onChange={(event) => {
+                      setEmail(event.target.value);
+                      if (emailError) {
+                        setEmailError("");
+                      }
+                    }}
+                    placeholder="you@example.com"
+                    disabled={isSubmittingEmail}
+                    className="border border-zinc-800 bg-[#060606] px-4 py-3 text-[13px] text-zinc-100 outline-none transition placeholder:text-zinc-600 focus:border-zinc-500"
+                  />
+                  <button
+                    type="submit"
+                    disabled={isSubmittingEmail}
+                    className="border border-zinc-700 px-4 py-3 text-[12px] uppercase tracking-[0.14em] text-zinc-200 transition hover:border-zinc-500 hover:text-white"
+                  >
+                    {isSubmittingEmail ? "Saving..." : "Email me in instead"}
+                  </button>
+                </form>
 
-              {emailError ? (
-                <p className="text-[12px] leading-6 text-rose-400">{emailError}</p>
-              ) : null}
+                {emailError ? (
+                  <p className="text-[12px] leading-6 text-rose-400">
+                    {emailError}
+                  </p>
+                ) : null}
 
-              {emailStatus ? (
-                <p className="text-[12px] leading-6 text-emerald-400">
-                  {emailStatus}
-                </p>
-              ) : null}
-            </div>
+                {emailStatus ? (
+                  <p className="text-[12px] leading-6 text-emerald-400">
+                    {emailStatus}
+                  </p>
+                ) : null}
+              </div>
+            ) : (
+              <p className="mt-6 border border-dashed border-zinc-900 p-4 text-[12px] leading-6 text-zinc-600">
+                Not into games? Lose {LOSSES_BEFORE_EMAIL} rounds and an email
+                shortcut appears here.
+              </p>
+            )}
 
             <div className="mt-8 grid gap-3">
               <button
@@ -511,7 +583,7 @@ export function SiteUnlockGate({
                   Dino Run
                 </div>
                 <div className="mt-2 text-[12px] leading-6">
-                  Jump 6 obstacles with `Space`, `W`, or `↑`.
+                  Jump {DINO_UNLOCK_SCORE} obstacles with Space, W, ↑, or tap.
                 </div>
                 <div className="mt-2 text-[11px] uppercase tracking-[0.12em] text-zinc-600">
                   Fast unlock | Timing challenge
@@ -531,7 +603,7 @@ export function SiteUnlockGate({
                   Space Invaders
                 </div>
                 <div className="mt-2 text-[12px] leading-6">
-                  Move with `A` and `D`, fire with `Space`, clear the wave.
+                  Move with A / D, fire with Space, clear the wave.
                 </div>
                 <div className="mt-2 text-[11px] uppercase tracking-[0.12em] text-zinc-600">
                   Longer run | More forgiving pace
@@ -595,8 +667,8 @@ function handleDinoJump(
     if (current.phase === "idle" || current.phase === "lost") {
       return {
         ...startDinoGame(),
-        playerY: 14,
-        velocity: 8.5,
+        playerY: DINO_JUMP_VELOCITY,
+        velocity: DINO_JUMP_VELOCITY,
       };
     }
 
@@ -606,8 +678,8 @@ function handleDinoJump(
 
     return {
       ...current,
-      playerY: 14,
-      velocity: 8.5,
+      playerY: DINO_JUMP_VELOCITY,
+      velocity: DINO_JUMP_VELOCITY,
     };
   });
 }
@@ -673,27 +745,41 @@ function DinoPanel({
         </div>
         <div className="text-right">
           <div className="text-[10px] uppercase tracking-[0.18em] text-zinc-700">
-            Score
+            Cleared
           </div>
-          <div className="mt-1 text-2xl font-black text-white">{state.score}</div>
+          <div className="mt-1 text-2xl font-black text-white">
+            {state.score}
+            <span className="text-sm text-zinc-600">/{DINO_UNLOCK_SCORE}</span>
+          </div>
         </div>
       </div>
 
-      <div className="relative mt-6 h-[320px] overflow-hidden border border-zinc-900 bg-[linear-gradient(180deg,#0b0b0b_0%,#090909_50%,#050505_100%)]">
+      {/* Tap anywhere on the board to jump — the primary control on touch. */}
+      <button
+        type="button"
+        onClick={onJump}
+        aria-label="Jump"
+        className="relative mt-6 block h-[260px] w-full cursor-pointer overflow-hidden border border-zinc-900 bg-[linear-gradient(180deg,#0b0b0b_0%,#090909_50%,#050505_100%)] sm:h-[320px]"
+      >
         <div className="absolute inset-x-0 bottom-12 border-t border-dashed border-zinc-800" />
         <div
-          className="absolute bottom-12 left-[12%] h-10 w-10 border border-zinc-700 bg-zinc-200 transition-transform duration-75"
+          className="absolute bottom-12 left-[12%] h-9 w-9 border border-zinc-600 bg-zinc-200 transition-transform duration-75"
           style={{ transform: `translateY(${-state.playerY}px)` }}
         />
         <div
-          className="absolute bottom-12 border border-emerald-700 bg-emerald-400/20"
+          className="absolute bottom-12 border border-emerald-600 bg-emerald-400/25"
           style={{
             left: `${state.obstacleX}%`,
             width: `${state.obstacleWidth}%`,
-            height: "42px",
+            height: "30px",
           }}
         />
-      </div>
+        {state.phase === "idle" ? (
+          <div className="absolute inset-0 flex items-center justify-center text-[11px] uppercase tracking-[0.18em] text-zinc-600">
+            Tap or press start
+          </div>
+        ) : null}
+      </button>
 
       <div className="mt-6 flex flex-wrap gap-3">
         <button
@@ -706,7 +792,7 @@ function DinoPanel({
         <button
           type="button"
           onClick={onJump}
-          className="border border-zinc-900 px-4 py-3 text-[12px] uppercase tracking-[0.14em] text-zinc-400 transition hover:border-zinc-700 hover:text-white"
+          className="flex-1 border border-zinc-800 px-4 py-3 text-[12px] uppercase tracking-[0.14em] text-zinc-300 transition hover:border-zinc-600 hover:text-white sm:flex-none"
         >
           Jump
         </button>
@@ -741,6 +827,8 @@ function InvadersPanel({
   onMoveRightEnd: () => void;
   onFire: () => void;
 }) {
+  const remaining = state.invaders.filter((invader) => invader.alive).length;
+
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -754,18 +842,18 @@ function InvadersPanel({
         </div>
         <div className="text-right">
           <div className="text-[10px] uppercase tracking-[0.18em] text-zinc-700">
-            Hits
+            Remaining
           </div>
-          <div className="mt-1 text-2xl font-black text-white">{state.score}</div>
+          <div className="mt-1 text-2xl font-black text-white">{remaining}</div>
         </div>
       </div>
 
-      <div className="relative mt-6 h-[320px] overflow-hidden border border-zinc-900 bg-[radial-gradient(circle_at_top,#101624_0%,#050505_65%)]">
+      <div className="relative mt-6 h-[260px] w-full overflow-hidden border border-zinc-900 bg-[radial-gradient(circle_at_top,#101624_0%,#050505_65%)] sm:h-[320px]">
         {state.invaders.map((invader) =>
           invader.alive ? (
             <div
               key={invader.id}
-              className="absolute h-5 w-8 border border-emerald-600 bg-emerald-400/20"
+              className="absolute h-5 w-8 border border-emerald-600 bg-emerald-400/25"
               style={{
                 left: `${invader.x + state.formationOffsetX}%`,
                 top: `${invader.y + state.formationOffsetY}%`,
@@ -783,9 +871,14 @@ function InvadersPanel({
         ))}
 
         <div
-          className="absolute bottom-[6%] h-5 w-10 border border-zinc-200 bg-zinc-100/15"
+          className="absolute bottom-[6%] h-5 w-10 border border-zinc-200 bg-zinc-100/20"
           style={{ left: `${state.shipX}%`, transform: "translateX(-50%)" }}
         />
+        {state.phase === "idle" ? (
+          <div className="absolute inset-0 flex items-center justify-center text-[11px] uppercase tracking-[0.18em] text-zinc-500">
+            Press start to defend
+          </div>
+        ) : null}
       </div>
 
       <div className="mt-6 flex flex-wrap gap-3">
@@ -805,35 +898,36 @@ function InvadersPanel({
         </button>
       </div>
 
-      <div className="mt-3 flex flex-wrap gap-3">
+      <div className="mt-3 grid grid-cols-3 gap-3">
         <button
           type="button"
-          onMouseDown={onMoveLeftStart}
-          onMouseUp={onMoveLeftEnd}
-          onMouseLeave={onMoveLeftEnd}
-          onTouchStart={onMoveLeftStart}
-          onTouchEnd={onMoveLeftEnd}
-          className="border border-zinc-900 px-4 py-3 text-[12px] uppercase tracking-[0.14em] text-zinc-400 transition hover:border-zinc-700 hover:text-white"
+          aria-label="Move left"
+          onPointerDown={onMoveLeftStart}
+          onPointerUp={onMoveLeftEnd}
+          onPointerLeave={onMoveLeftEnd}
+          onPointerCancel={onMoveLeftEnd}
+          className="select-none border border-zinc-800 px-4 py-4 text-[13px] uppercase tracking-[0.14em] text-zinc-300 transition hover:border-zinc-600 hover:text-white"
         >
-          Move left
+          ◀ Left
         </button>
         <button
           type="button"
-          onMouseDown={onMoveRightStart}
-          onMouseUp={onMoveRightEnd}
-          onMouseLeave={onMoveRightEnd}
-          onTouchStart={onMoveRightStart}
-          onTouchEnd={onMoveRightEnd}
-          className="border border-zinc-900 px-4 py-3 text-[12px] uppercase tracking-[0.14em] text-zinc-400 transition hover:border-zinc-700 hover:text-white"
-        >
-          Move right
-        </button>
-        <button
-          type="button"
+          aria-label="Fire"
           onClick={onFire}
-          className="border border-zinc-900 px-4 py-3 text-[12px] uppercase tracking-[0.14em] text-zinc-400 transition hover:border-zinc-700 hover:text-white"
+          className="select-none border border-zinc-700 px-4 py-4 text-[13px] uppercase tracking-[0.14em] text-zinc-200 transition hover:border-zinc-500 hover:text-white"
         >
           Fire
+        </button>
+        <button
+          type="button"
+          aria-label="Move right"
+          onPointerDown={onMoveRightStart}
+          onPointerUp={onMoveRightEnd}
+          onPointerLeave={onMoveRightEnd}
+          onPointerCancel={onMoveRightEnd}
+          className="select-none border border-zinc-800 px-4 py-4 text-[13px] uppercase tracking-[0.14em] text-zinc-300 transition hover:border-zinc-600 hover:text-white"
+        >
+          Right ▶
         </button>
       </div>
     </div>

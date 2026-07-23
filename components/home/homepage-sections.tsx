@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import { ContactForm } from "@/components/home/contact-form";
 import { DetailCard } from "@/components/home/detail-card";
 import { Tag } from "@/components/home/tag";
 import { TypewriterTitle } from "@/components/home/typewriter-title";
@@ -35,6 +36,28 @@ export function HomepageSections({
           transition={{ duration: 0.5 }}
         >
           <TypewriterTitle />
+
+          <motion.p
+            className="mt-4 max-w-2xl text-[16px] font-semibold leading-8 text-zinc-100 sm:text-[17px]"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.4, duration: 0.6 }}
+          >
+            I build the software that runs real operations — and the businesses
+            that run on it.
+          </motion.p>
+
+          <motion.div
+            className="mt-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.5, duration: 0.6 }}
+          >
+            <span className="inline-flex items-center gap-2 border border-emerald-800 bg-emerald-500/[0.06] px-3 py-1.5 text-[11px] uppercase tracking-[0.14em] text-emerald-300">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+              Open to select roles &amp; collaborations
+            </span>
+          </motion.div>
 
           <motion.div
             className="mt-6 space-y-2.5"
@@ -74,10 +97,16 @@ export function HomepageSections({
             transition={{ delay: 2.2, duration: 0.4 }}
           >
             <a
+              href="#contact"
+              className="inline-flex items-center gap-2 border border-emerald-700 bg-emerald-500/[0.08] px-5 py-2.5 text-[13px] uppercase tracking-[0.14em] text-emerald-200 transition hover:border-emerald-500 hover:text-white"
+            >
+              Get in touch <ArrowRight className="h-3.5 w-3.5" />
+            </a>
+            <a
               href="#projects"
               className="inline-flex items-center gap-2 border border-zinc-600 px-5 py-2.5 text-[13px] uppercase tracking-[0.14em] text-zinc-200 transition hover:border-zinc-400 hover:text-white"
             >
-              View projects <ArrowRight className="h-3.5 w-3.5" />
+              View projects
             </a>
             <Link
               href="/resume"
@@ -200,10 +229,12 @@ export function HomepageSections({
         >
           <p className="max-w-lg text-[13px] leading-7 text-zinc-300">
             Building something interesting? Want to talk operations, AI, or
-            product? Reach out, always open to good conversations.
+            product? Send a note below, or reach out through any of these.
           </p>
 
-          <div className="mt-6 flex flex-wrap gap-3">
+          <ContactForm />
+
+          <div className="mt-8 flex flex-wrap gap-3">
             {contactLinks.map((link) => (
               <a
                 key={link.label}

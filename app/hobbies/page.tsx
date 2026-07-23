@@ -15,7 +15,7 @@ const hobbies = [
   {
     name: "Personal Caffeine Lab",
     detail:
-      "Naturally driven always engergized dont believe in caffeine. Up before sunrise, and ready to chase the sunset into tomorrow. Strong advoicate for running and healthy habbits to success.",
+      "Naturally driven and always energized — I don't really need caffeine. Up before sunrise and ready to chase the sunset into tomorrow. A strong advocate for running and healthy habits as the path to success.",
   },
   {
     name: "Youth Coaching and Mentorship",

@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import Image from "next/image";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 type DetailModalProps = {
   title: string;
@@ -26,6 +26,10 @@ export function DetailModal({
   imageCaption,
   onClose,
 }: DetailModalProps) {
+  // Some entries point at images that may not exist yet; hide the frame on
+  // load failure instead of showing a broken-image box.
+  const [imageFailed, setImageFailed] = useState(false);
+
   useEffect(() => {
     // Lock page scroll while a modal is open so the overlay feels anchored.
     const onKeyDown = (event: KeyboardEvent) => {
@@ -46,14 +50,14 @@ export function DetailModal({
   return (
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 px-4"
+        className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/80 px-4 py-6"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={onClose}
       >
         <motion.div
-          className="w-full max-w-2xl border border-zinc-800 bg-[#090909] p-6 shadow-2xl shadow-black/50"
+          className="my-auto max-h-[90vh] w-full max-w-2xl overflow-y-auto border border-zinc-800 bg-[#090909] p-5 shadow-2xl shadow-black/50 md:p-6"
           initial={{ opacity: 0, y: 20, scale: 0.98 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 16, scale: 0.98 }}
@@ -82,7 +86,7 @@ export function DetailModal({
 
           <p className="mt-5 text-[14px] leading-8 text-zinc-300">{body}</p>
 
-          {imageSrc ? (
+          {imageSrc && !imageFailed ? (
             <div className="mt-6 overflow-hidden border border-zinc-900 bg-[#050505]">
               {/* Project visuals are optional, so existing entries still work
                   even when an image has not been added yet. */}
@@ -93,6 +97,7 @@ export function DetailModal({
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 768px"
+                  onError={() => setImageFailed(true)}
                 />
               </div>
               {imageCaption ? (

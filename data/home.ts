@@ -46,6 +46,45 @@ export const experience: ExperienceItem[] = [
 
 export const projects: ProjectItem[] = [
   {
+    name: "Dump & Go Hub",
+    desc: "The full operations platform behind the dumpster and logistics business — billing, dispatch, fleet, customers, and live financials in one dashboard.",
+    tags: ["Full-Stack", "Operations", "Logistics"],
+    status: "Live",
+    detail:
+      "Dump & Go Hub runs the whole business from one screen: job log and open pipeline, invoicing and collections, dispatch and trucking, customers and drivers, plus a live financial layer — revenue, net-profit margins, fleet utilization, and dump-site cost per ton. It replaced spreadsheets and group texts with a single source of truth, complete with alerts for aging jobs, overdue invoices, and dumpsters due for a dump run.",
+    highlights: [
+      "Billing to collections: invoices, overdue alerts, and revenue tracking",
+      "Dispatch, trucking, fleet, and customer management in one place",
+      "Live P&L: margins, all-time net, fleet utilization, and $/ton by dump site",
+    ],
+  },
+  {
+    name: "Fine Finish Billing",
+    desc: "Billing, invoicing, and job-costing app for a millwork and finish-carpentry shop — from work orders all the way to financials.",
+    tags: ["Full-Stack", "Billing", "Systems"],
+    status: "Live",
+    detail:
+      "Fine Finish Billing turns shop production into clean financials. Work orders, labor, materials, and purchasing roll up into per-job costing and over-budget alerts, so ownership sees real numbers on every job instead of end-of-month surprises.",
+    highlights: [
+      "Job costing that ties labor, materials, and purchasing to each job",
+      "Over-budget alerts before a job runs away",
+      "Invoicing and financials inside one operations workflow",
+    ],
+  },
+  {
+    name: "Anduril Grand Prix Drone",
+    desc: "Our entry for the Anduril Grand Prix — an autonomous drone platform designed and built from the ground up over the last month.",
+    tags: ["Autonomy", "UAS", "Defense"],
+    status: "Competition Build",
+    detail:
+      "Built over the last month as our entry for the Anduril Grand Prix, this is a hands-on autonomous drone platform: airframe, flight and autonomy systems, and real-time situational awareness, developed under real competition constraints and deadlines. It is the applied engineering counterpart to the earlier America Made UAS venture — a working build, not a business plan.",
+    highlights: [
+      "Designed and built in a one-month competition sprint",
+      "Autonomous flight systems with real-time situational awareness",
+      "Hands-on airframe and integration under real deadlines",
+    ],
+  },
+  {
     name: "BackSnap",
     desc: "AI-powered storytelling photo platform focused on preserving memories through voice and narrative.",
     tags: ["AI", "Product"],
@@ -110,22 +149,6 @@ export const projects: ProjectItem[] = [
     imageCaption: "A snapshot representing the internal Tech Hub lab environment.",
   },
   {
-    name: "Dump & Go Systems",
-    desc: "Operational tooling and quoting flows that support a fast-moving logistics business.",
-    tags: ["Logistics", "Systems"],
-    status: "Scaling",
-    detail:
-      "This work focuses on making an operating business run cleaner: lead intake, quoting, dispatch thinking, and the little systems that reduce confusion during growth.",
-    highlights: [
-      "Customer-first quoting flow",
-      "Operational visibility improvements",
-      "Tools shaped by real field work",
-    ],
-    imageSrc: "/projects/dump-go.jpg",
-    imageAlt: "Dump and Go systems workflow preview",
-    imageCaption: "Operational tooling concept for quoting and logistics visibility.",
-  },
-  {
     name: "Shop Automation Stack",
     desc: "Internal systems for CNC workflows, file handling, infrastructure, and process reliability.",
     tags: ["CNC", "Automation"],
@@ -143,15 +166,15 @@ export const projects: ProjectItem[] = [
   },
   {
     name: "America Made UAS",
-    desc: "Drone Autonomous theory startup",
-    tags: ["CNC", "Automation"],
-    status: "Submitted",
+    desc: "Last year's venture: a business model for an American-made autonomous drone company serving public safety and first responders.",
+    tags: ["Defense", "Autonomy", "Business Model"],
+    status: "2025 · Submitted",
     detail:
-      "Engineered and developed a business model for an autonomous drone company combating real-world problems for public safety and firstresponders.",
+      "Developed last year, America Made UAS was the business side of the drone work — a full model for an American-made autonomous drone company built around public safety and first responders, with TAK integration and a path to government contracting. It set the direction that the later Anduril Grand Prix build turned into working hardware.",
     highlights: [
-      "TAK integration for real-time situational awareness",
-      "Autonomous flight systems for rapid deployment",
-      "American Made certification for government contracting",
+      "Business model for an American-made autonomous UAS company",
+      "TAK integration and public-safety / first-responder mission focus",
+      "Groundwork for the later hands-on Anduril Grand Prix build",
     ],
     imageSrc: "/projects/shop-automation.jpg",
     imageAlt: "Shop automation stack preview",

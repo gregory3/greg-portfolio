@@ -10,7 +10,7 @@ import { navItems, projects, socials, stats } from "@/data/home";
 import type { ProjectItem } from "@/types/home";
 
 export default function Page() {
-  const initialVisibleProjects = 4;
+  const initialVisibleProjects = 6;
   const [visibleProjects, setVisibleProjects] = useState(initialVisibleProjects);
   const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(null);
 
@@ -33,7 +33,7 @@ export default function Page() {
         <HomepageSections
           visibleProjects={visibleProjects}
           onLoadMoreProjects={() =>
-            setVisibleProjects((current) => Math.min(current + 2, projects.length))
+            setVisibleProjects((current) => Math.min(current + 3, projects.length))
           }
           onOpenProject={setSelectedProject}
         />

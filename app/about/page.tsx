@@ -35,18 +35,18 @@ export default function AboutPage() {
               that is tangible, useful, and tested by reality.
             </p>
             <p>
-              A lot of what I build comes from living inside the problems first: life limiations,
+              A lot of what I build comes from living inside the problems first: life limitations,
               shop workflows, logistics, automation, quoting, infrastructure,
               and the day-to-day friction that slows good humans down.
             </p>
             <p>
-              That perspective shapes how I approach everything in life including software and AI too. The
+              That perspective shapes how I approach everything in life, including software and AI. The
               goal is not just to be or make something impressive. The goal is to be or make
               something people can actually use, trust, and keep using.
             </p>
             <p>
-              A builder is shaped by experience, adversity, and constant learning. 
-              Perspective is patience, and patience is the time spent in life 
+              A builder is shaped by experience, adversity, and constant learning.
+              Perspective is patience, and patience is the time spent in life.
               I’ve been in the trenches, and that’s where I learned to adapt, think deeper, and move with purpose.
               I believe real growth comes from doing — building systems, solving problems, and turning ideas into something tangible. 
               Every challenge has become fuel, and I carry that mindset into everything I create. 
