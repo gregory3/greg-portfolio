@@ -434,28 +434,41 @@ export function SiteUnlockGate({
               Site Access
             </div>
             <h1 className="mt-4 text-3xl font-black uppercase tracking-[0.08em] text-white sm:text-4xl">
-              Beat a game to unlock the portfolio
+              Play a game to unlock — or skip straight in
             </h1>
             <p className="mt-5 max-w-md text-[14px] leading-8 text-zinc-400">
-              Pick a mini-game and clear the challenge to open the site. Once
-              you win, access is remembered on this browser.
+              The game is just for fun. Clear a quick mini-game for the full
+              experience, or skip it and head right to the site. Either way,
+              your choice is remembered on this browser.
             </p>
 
-            <div className="mt-5 flex items-center gap-3 text-[11px] uppercase tracking-[0.16em] text-zinc-600">
-              <span>Attempts lost</span>
-              <span className="flex gap-1.5">
-                {Array.from({ length: LOSSES_BEFORE_EMAIL }, (_, index) => (
-                  <span
-                    key={index}
-                    className={`h-2 w-2 rounded-full border ${
-                      index < losses
-                        ? "border-rose-500 bg-rose-500/70"
-                        : "border-zinc-700"
-                    }`}
-                  />
-                ))}
-              </span>
+            <div className="mt-6 flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                onClick={() => unlockSite(setUnlocked)}
+                className="inline-flex items-center gap-2 border border-zinc-500 px-5 py-3 text-[12px] uppercase tracking-[0.14em] text-zinc-100 transition hover:border-zinc-300 hover:text-white"
+              >
+                Skip the game — enter the site →
+              </button>
             </div>
+
+            {losses > 0 ? (
+              <div className="mt-6 flex items-center gap-3 text-[11px] uppercase tracking-[0.16em] text-zinc-600">
+                <span>Attempts lost</span>
+                <span className="flex gap-1.5">
+                  {Array.from({ length: LOSSES_BEFORE_EMAIL }, (_, index) => (
+                    <span
+                      key={index}
+                      className={`h-2 w-2 rounded-full border ${
+                        index < losses
+                          ? "border-rose-500 bg-rose-500/70"
+                          : "border-zinc-700"
+                      }`}
+                    />
+                  ))}
+                </span>
+              </div>
+            ) : null}
 
             {showEmailGate ? (
               <div className="mt-6 grid gap-3 border border-zinc-700 bg-white/[0.03] p-4">
@@ -562,12 +575,7 @@ export function SiteUnlockGate({
                   </p>
                 ) : null}
               </div>
-            ) : (
-              <p className="mt-6 border border-dashed border-zinc-900 p-4 text-[12px] leading-6 text-zinc-600">
-                Not into games? Lose {LOSSES_BEFORE_EMAIL} rounds and an email
-                shortcut appears here.
-              </p>
-            )}
+            ) : null}
 
             <div className="mt-8 grid gap-3">
               <button
